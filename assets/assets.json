@@ -1,0 +1,18 @@
+{
+  "initial": [
+    {
+      "type": "atlas",
+      "key": "general",
+      "textureURL": "assets/atlas/general.png",
+      "atlasURL": "assets/atlas/general.json",
+      "atlasData": null,
+      "overwrite": false
+    },
+    {
+      "type": "json",
+      "key": "reelsData",
+      "url": "assets/reelsData.json",
+      "overwrite": false
+    }
+  ]
+}
