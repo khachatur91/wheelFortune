@@ -1,26 +1,27 @@
 /**
  * Created by khachatur on 6/29/17.
  */
+import WheelModel from '../model/WheelModel'
 
 export default class WheelController {
   constructor (model) {
-
     this.model = model
-    this.model.onRotateStateChange.add(this.onRotateStateChangeListener, this)
   }
 
   setData (reelsData) {
     this.model.setReelsData(reelsData)
   }
 
-  rotateWheel () {
-    this.model.setWheelRotateState(true)
+  resetWheel () {
+    this.model.resetWheel()
   }
 
-  onRotateStateChangeListener (isStart) {
-    if (!isStart) {
-      console.log("Wheel Stopped")
-    }
+  rotateWheel () {
+    this.model.setWheelRotateState(WheelModel.WHEEL_START_STATE)
+  }
+
+  stopWheel () {
+    this.model.setWheelRotateState(WheelModel.WHEEL_STOP_PROCESSING_STATE)
   }
 
   setPatternToRoll (patternArray) {

@@ -13,6 +13,22 @@
       "key": "reelsData",
       "url": "assets/reelsData.json",
       "overwrite": false
+    },
+    {
+      "type": "audio",
+      "key": "reveal",
+      "urls": [
+        "assets/audio/reveal.mp3"
+      ],
+      "autoDecode": true
+    },
+    {
+      "type": "audio",
+      "key": "spin",
+      "urls": [
+        "assets/audio/spin.mp3"
+      ],
+      "autoDecode": true
     }
   ]
 }
