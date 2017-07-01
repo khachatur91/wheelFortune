@@ -16,7 +16,7 @@ export default class ItemView extends Phaser.Image {
   startShake () {
     let tween = this.game.add.tween(this)
     tween.onComplete.add(this.onShakeComplete, this)
-    tween.to({x: this.position.x + 10}, 3000, this.shakeEasing.bind(this), true, this.game.rnd.integerInRange(0, 1000))
+    tween.to({x: this.position.x + 10}, 2000, this.shakeEasing.bind(this), true, this.game.rnd.integerInRange(0, 1000))
   }
 
   tweenTo (x, y, callback) {

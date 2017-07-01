@@ -21,11 +21,6 @@ export default class WheelModel {
     this.onDataSet.dispatch(reelsData)
   }
 
-  resetWheel () {
-    this.patternArray = null
-    this.onReset.dispatch()
-  }
-
   setWheelRollPattern (patternArray) {
     this.patternArray = patternArray
     this.onPatternSet.dispatch(patternArray)

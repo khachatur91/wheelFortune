@@ -36,8 +36,6 @@ export default class WheelView extends Phaser.Group {
     this.model = model
     this.model.onDataSet.add(this.onDataSetListener, this)
     this.model.onRotateStateChange.add(this.onRotateStateChangeListener, this)
-    this.model.onPatternSet.add(this.onPatternSetListener, this)
-    // this.model.onReset.add(this.startZoomOut, this)
   }
 
   onDataSetListener (reelsData) {
@@ -59,9 +57,10 @@ export default class WheelView extends Phaser.Group {
     switch (rotateState) {
       case WheelModel.WHEEL_START_STATE:
         this.audioManager.play('spinSFX')
-        this.reelViews.forEach((reelView) => {
-          reelView.startRotation()
-        })
+        for (let i = 0, length = this.reelViews.length; i < length; i++) {
+          this.reelViews[i].setDestinationIndex(this.model.patternArray[i])
+          this.reelViews[i].startRotation()
+        }
         break
       case WheelModel.WHEEL_STOP_STATE:
         this.stoppedRealsCounter = 0
@@ -88,12 +87,6 @@ export default class WheelView extends Phaser.Group {
     this.maxSpeedReachReelsCounter ++
     if (this.maxSpeedReachReelsCounter === this.reelViews.length) {
       this.model.setWheelSpeedOnMax()
-    }
-  }
-
-  onPatternSetListener (patternArray) {
-    for (let i = 0, length = this.reelViews.length; i < length; i++) {
-      this.reelViews[i].setDestinationIndex(patternArray[i])
     }
   }
 

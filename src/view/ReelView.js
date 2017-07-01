@@ -57,7 +57,7 @@ export default class ReelView extends Phaser.Group {
   startRotation () {
     this.isRotating = true
     this.tween = this.game.add.tween(this)
-    let duration = this.game.rnd.integerInRange(3000, 4000)
+    let duration = this.game.rnd.integerInRange(2000, 3000)
     let delay = this.game.rnd.integerInRange(0, 500)
     this.tween.onComplete.add(this.onReachMaxSpeed, this)
     this.tween.to({currentAngularSpeed: this.maxAngularSpeed}, duration, Phaser.Easing.Quadratic.InOut, true, delay)
@@ -70,12 +70,14 @@ export default class ReelView extends Phaser.Group {
   }
 
   setDestinationIndex (index) {
+    // if result pattern is not defined , result would be a random
     index = index || this.game.rnd.integerInRange(0, this.parts.length - 1)
     this.currentItemIndex = index
     let rotationSteps = this.game.rnd.integerInRange(1, 2) * this.parts.length + index
 
     this.toRotation = this.sectorAngle * rotationSteps
 
+    this.gridItems.length = 0
     this.gridItems.push(this.items[(this.currentItemIndex - 1 + this.parts.length) % this.parts.length])
     this.gridItems.push(this.items[this.currentItemIndex])
     this.gridItems.push(this.items[(this.currentItemIndex + 1) % this.parts.length])

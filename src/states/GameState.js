@@ -18,6 +18,7 @@ export default class GameState extends Phaser.State {
   init () {
     this.stage.backgroundColor = '#1b1a23'
 
+    this.resultPatterns = this.game.cache.getJSON('resultPatterns').patterns
     this.model = new WheelModel()
 
     this.audioManager = AudioManager.instance
@@ -67,10 +68,42 @@ export default class GameState extends Phaser.State {
     if (this.itemsCounter === 15) {
       let tween = this.game.add.tween(this.colorContainer.scale)
       tween.to({x: 1.5, y: 1.5}, 1000).start()
+      tween.onComplete.add(this.onPopupZoomComplete, this)
     }
   }
 
-  preload () {
+  showColorContainer () {
+    this.colorContainer.visible = true
+    let tween = this.game.add.tween(this.colorContainer)
+    let scaleTween = this.game.add.tween(this.colorContainer.scale)
+    scaleTween.to({x: 1, y: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
+    tween.to({y: 100, alpha: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
+    tween.onComplete.add(this.onPopupShowListener, this)
+  }
+
+  onPopupShowListener () {
+    this.createItemClones(this.view.getGridItems())
+  }
+
+  onPopupZoomComplete () {
+    let tween = this.game.add.tween(this.colorContainer)
+    let scaleTween = this.game.add.tween(this.colorContainer.scale)
+    scaleTween.to({x: 0, y: 0}, 1000, Phaser.Easing.Quadratic.Out, true, 2000)
+    tween.to({y: -300, alpha: 0}, 1000, Phaser.Easing.Quadratic.Out, true, 2000)
+    tween.onComplete.add(this.onPopupHideComplete, this)
+  }
+
+  onPopupHideComplete () {
+    this.colorContainer.removeChildren()
+    this.colorContainer.visible = false
+
+    this.setResultPattern()
+    this.setPlayButtonInput(true)
+  }
+
+  setResultPattern () {
+    let randomPatternIndex = this.game.rnd.integerInRange(0, this.resultPatterns.length - 1)
+    this.controller.setPatternToRoll(this.resultPatterns[randomPatternIndex])
   }
 
   create () {
@@ -82,11 +115,11 @@ export default class GameState extends Phaser.State {
     this.view.position.setTo(this.game.world.centerX, this.game.world.centerY)
 
     this.controller.setData(this.game.cache.getJSON('reelsData').reels)
-    this.setWheelResultPatter()
+    this.setResultPattern()
 
     this.framesForBlur = 6
 
-    this.overlayBg = this.game.add.image(0, 0, 'general', 'bg')
+    this.game.add.image(0, 0, 'general', 'bg')
 
     let buttonsPadding = 300
     this.playButton = this.game.add.button(0, this.game.world.centerY, 'general', this.onPlayClick, this, this.playButtonActiveFrame, this.playButtonActiveFrame, this.playButtonActiveFrame, this.playButtonActiveFrame)
@@ -109,10 +142,6 @@ export default class GameState extends Phaser.State {
     this.colorContainer.visible = false
     this.colorContainer.scale.setTo(0)
     this.colorContainer.alpha = 0
-  }
-
-  setWheelResultPatter () {
-    this.controller.setPatternToRoll([1, 2, 3, 4, 5])
   }
 
   onPlayClick () {
@@ -152,15 +181,6 @@ export default class GameState extends Phaser.State {
     }
   }
 
-  showColorContainer () {
-    this.colorContainer.visible = true
-    let tween = this.game.add.tween(this.colorContainer)
-    let scaleTween = this.game.add.tween(this.colorContainer.scale)
-    scaleTween.to({x: 1, y: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
-    tween.to({y: 100, alpha: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
-    tween.onComplete.add(this.onPopupShowListener, this)
-  }
-
   preRender () {
     if (this.isRolling) {
       this.frames[this.frameIndex].cls()
@@ -181,9 +201,5 @@ export default class GameState extends Phaser.State {
         this.game.context.drawImage(this.frames[i].canvas, 0, 0)
       }
     }
-  }
-
-  onPopupShowListener () {
-    this.createItemClones(this.view.getGridItems())
   }
 }

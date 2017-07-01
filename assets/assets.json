@@ -15,6 +15,12 @@
       "overwrite": false
     },
     {
+      "type": "json",
+      "key": "resultPatterns",
+      "url": "assets/resultPatterns.json",
+      "overwrite": false
+    },
+    {
       "type": "audio",
       "key": "reveal",
       "urls": [
