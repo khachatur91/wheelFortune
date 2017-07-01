@@ -132,6 +132,7 @@ preRender () {
   Besides the general atlas and sfx files in assets folder are two json files
   
   #### resultPatterns.json
+  ```javascript
   {
   "patterns": [
     [1, 2, 3, 4, 5],
@@ -139,9 +140,11 @@ preRender () {
     [5, 4, 3, 2, 1]
   ]
 }
+```
 ... array of result patterns randomly choosen in the game
 
 #### reelsData.json
+```javascript
 {
 "reels": [
     [
@@ -159,7 +162,7 @@ preRender () {
     ...
  ]
  }
- 
+ ```
  Data represents the content of each reel. In each array are stored item keys.
 
   
