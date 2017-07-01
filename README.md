@@ -1,69 +1,44 @@
-# Phaser + ES6 + Webpack.
-#### A bootstrap project to create games with Phaser + ES6 + Webpack.
+# Wheel Of Fortune Slot Machine.
 
-![Phaser+ES6+Webpack](https://raw.githubusercontent.com/lean/phaser-es6-webpack/master/assets/images/phaser-es6-webpack.jpg)
+(wheelFortune/preview.jpg)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
-
-## Features
+## Technology
 - ESLINT with JavaScript Standard Style configuration
-- Next generation of Javascript
+- Next generation of Javascript (ES6)
+- Phaser game engine
 - Webpack ready
-- Multiple browser testing
-- WebFont Loader
-
+- Multiple browser testin
 
 # Setup
-To use this bootstrap you’ll need to install a few things before you have a working copy of the project.
+install all dependencies       - npm install 
+development server run command - npm run dev
+build for deployment           - npm run deploy
 
-## 1. Clone this repo:
+# Game
+The game is kind of a mix of slot machine and wheel of fortune
 
-Navigate into your workspace directory.
+Click "Play" to spin the wheel
+Blur effect is implemented for the wheel, while it's spinning
+When all reals reach to their max speed, "Stop" button becomes active
+Click "Stop" to stop the wheel
 
-Run:
+3 main raws are differed with a light on the wheel
+As in the circular environment items from different raws are going farther from each other, 
+an additional popup appears where all those items tween and make a proper 3 lines for slot proper view
+After popup disappears, "Play" button becomes active
 
-```git clone https://github.com/lean/phaser-es6-webpack.git```
+# Scenes
+Game has 2 scenes BootState and GameState
 
-## 2. Install node.js and npm:
+## BootState
+Responsible for showing a logo and loading assets
 
-https://nodejs.org/en/
+## GameState
+All the interesting stuff happens here
 
+# Code Structure
+For the Wheel component it's used an MVC design
+In game state WheelModel is made which is passed to WheelController and WheelView
+WheelModel has Phaser.Signals which are the main way for communication bettwen Controller and View
 
-## 3. Install dependencies (optionally you could install [yarn](https://yarnpkg.com/)):
-
-Navigate to the cloned repo’s directory.
-
-Run:
-
-```npm install``` 
-
-or if you choose yarn, just run ```yarn```
-
-## 4. Run the development server:
-
-Run:
-
-```npm run dev```
-
-This will run a server so you can run the game in a browser.
-
-Open your browser and enter localhost:3000 into the address bar.
-
-Also this will start a watch process, so you can change the source and the process will recompile and refresh the browser
-
-
-## Build for deployment:
-
-Run:
-
-```npm run deploy```
-
-This will optimize and minimize the compiled bundle.
-
-## Credits
-Big thanks to this great repos:
-
-https://github.com/belohlavek/phaser-es6-boilerplate
-
-https://github.com/cstuncsik/phaser-es6-demo
+A util ColorContainer popup component, which appears during the session end, is not implemented in MVC because of having not much virality 
