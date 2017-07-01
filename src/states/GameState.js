@@ -63,6 +63,7 @@ export default class GameState extends Phaser.State {
   }
 
   createItemClones (items) {
+    this.itemsCounter = 0
     for (let i = 0; i < items.length; i++) {
       let rawGridItems = items[i]
       for (let j = 0; j < rawGridItems.length; j++) {
@@ -71,8 +72,20 @@ export default class GameState extends Phaser.State {
         item.position.setTo(rawGridItems[j].x, rawGridItems[j].y)
         this.game.add.existing(item)
 
-        item.tweenTo(720 + 60 * j, 120 + 40 * i)
+        item.tweenTo(this.colorContainer.x - this.colorContainer.width / 2 + 150 + 105 * j,
+          this.colorContainer.y + 125 + 72 * i, this.onItemTweenComplete.bind(this, item))
       }
+    }
+  }
+
+  onItemTweenComplete (item) {
+    item.position.x -= this.colorContainer.x
+    item.position.y -= this.colorContainer.y
+    this.colorContainer.addChild(item)
+    this.itemsCounter ++
+    if (this.itemsCounter === 15) {
+      let tween = this.game.add.tween(this.colorContainer.scale)
+      tween.to({x: 1.5, y: 1.5}, 1000).start()
     }
   }
 
@@ -108,7 +121,7 @@ export default class GameState extends Phaser.State {
 
 
     this.colorContainer = this.game.add.image(this.game.world.centerX, 0, 'general', 'popup')
-    this.colorContainer.anchor.setTo(0.5, 1)
+    this.colorContainer.anchor.setTo(0.5, 0)
     this.colorContainer.visible = false
     this.colorContainer.scale.setTo(0)
     this.colorContainer.alpha = 0
@@ -154,7 +167,7 @@ export default class GameState extends Phaser.State {
     let tween = this.game.add.tween(this.colorContainer)
     let scaleTween = this.game.add.tween(this.colorContainer.scale)
     scaleTween.to({x: 1, y: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
-    tween.to({y: 400, alpha: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
+    tween.to({y: 100, alpha: 1}, 1000, Phaser.Easing.Quadratic.Out, true)
     tween.onComplete.add(this.onPopupShowListener, this)
   }
 
@@ -173,7 +186,7 @@ export default class GameState extends Phaser.State {
   }
 
   render () {
-    if (this.isRolling) {
+    if (this.isRolling && this.start) {
       for (let i = 0; i < this.framesForBlur; i++) {
         this.game.context.drawImage(this.frames[i].canvas, 0, 0)
       }
