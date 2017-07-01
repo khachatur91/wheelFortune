@@ -4,6 +4,7 @@
 import Phaser from 'phaser'
 import ReelView from './ReelView'
 import WheelModel from '../model/WheelModel'
+import AudioManager from '../AudioManager';
 
 export default class WheelView extends Phaser.Group {
   static COLORS = [
@@ -24,6 +25,8 @@ export default class WheelView extends Phaser.Group {
 
   constructor (model) {
     super(window.game)
+
+    this.audioManager = AudioManager.instance
 
     this.reelViews = []
     this.gridItems = [[], [], []]
@@ -55,6 +58,7 @@ export default class WheelView extends Phaser.Group {
   onRotateStateChangeListener (rotateState) {
     switch (rotateState) {
       case WheelModel.WHEEL_START_STATE:
+        this.audioManager.play('spinSFX')
         this.reelViews.forEach((reelView) => {
           reelView.startRotation()
         })
@@ -62,7 +66,7 @@ export default class WheelView extends Phaser.Group {
       case WheelModel.WHEEL_STOP_STATE:
         this.stoppedRealsCounter = 0
         // this.startZoomIn()
-        this.startRawShake()
+        this.startGridShake()
         break
       case WheelModel.WHEEL_STOP_PROCESSING_STATE:
         this.reelViews.forEach((reelView) => {
@@ -71,12 +75,6 @@ export default class WheelView extends Phaser.Group {
         this.maxSpeedReachReelsCounter = 0
         break
     }
-  }
-
-  startRawShake () {
-    this.reelViews.forEach((reelView) => {
-      reelView.startItemShake()
-    })
   }
 
   onReelRotationStopListener () {
@@ -89,7 +87,7 @@ export default class WheelView extends Phaser.Group {
   onReelMaxSpeedListener () {
     this.maxSpeedReachReelsCounter ++
     if (this.maxSpeedReachReelsCounter === this.reelViews.length) {
-      this.model.setWheelSpeedOnMax(true)
+      this.model.setWheelSpeedOnMax()
     }
   }
 
@@ -99,16 +97,12 @@ export default class WheelView extends Phaser.Group {
     }
   }
 
-  startZoomIn () {
-    this.originPosition = {x: this.position.x, y: this.position.y}
-    this.originScale = {x: this.scale.x, y: this.scale.y}
-    let toScale = 1.4
-    this.zoomTween = this.game.add.tween(this.scale)
-    this.zoomTween.to({x: toScale, y: toScale}, 2000, null, true, 1000)
-    this.positionTween = this.game.add.tween(this)
-    this.positionTween.to({x: 1200}, 2000, null, true, 1000)
+  startGridShake () {
+    this.reelViews.forEach((reelView) => {
+      reelView.startRawShake()
+    })
   }
-
+  // Returns items in the 5x3 grid
   getGridItems () {
     for (let i = 0; i < this.reelViews.length; i++) {
       let reelGridItems = this.reelViews[i].getRawItems()
@@ -119,6 +113,18 @@ export default class WheelView extends Phaser.Group {
     return this.gridItems
   }
 
+  // This was used for zoom solution, which was switched by colorContainer popup one
+  startZoomIn () {
+    this.originPosition = {x: this.position.x, y: this.position.y}
+    this.originScale = {x: this.scale.x, y: this.scale.y}
+    let toScale = 1.4
+    this.zoomTween = this.game.add.tween(this.scale)
+    this.zoomTween.to({x: toScale, y: toScale}, 2000, null, true, 1000)
+    this.positionTween = this.game.add.tween(this)
+    this.positionTween.to({x: 1200}, 2000, null, true, 1000)
+  }
+
+  // This was used for zoom solution, which was switched by colorContainer popup one
   startZoomOut () {
     // set default values if they are undefined
     let toScale = this.originScale || {x: 1, y: 1}

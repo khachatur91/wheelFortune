@@ -44,7 +44,7 @@ export default class ReelView extends Phaser.Group {
     }
   }
 
-  startItemShake () {
+  startRawShake () {
     this.gridItems.forEach((item) => {
       item.startShake()
     })
@@ -52,18 +52,6 @@ export default class ReelView extends Phaser.Group {
 
   getRawItems () {
     return this.gridItems
-  }
-
-  setDestinationIndex (index) {
-    index = index || this.game.rnd.integerInRange(0, this.parts.length - 1)
-    this.currentItemIndex = index
-    let rotationSteps = this.game.rnd.integerInRange(2, 3) * this.parts.length + index
-
-    this.toRotation = this.sectorAngle * rotationSteps
-
-    this.gridItems.push(this.items[(this.currentItemIndex - 1 + this.parts.length) % this.parts.length])
-    this.gridItems.push(this.items[this.currentItemIndex])
-    this.gridItems.push(this.items[(this.currentItemIndex + 1) % this.parts.length])
   }
 
   startRotation () {
@@ -81,6 +69,18 @@ export default class ReelView extends Phaser.Group {
     }
   }
 
+  setDestinationIndex (index) {
+    index = index || this.game.rnd.integerInRange(0, this.parts.length - 1)
+    this.currentItemIndex = index
+    let rotationSteps = this.game.rnd.integerInRange(1, 2) * this.parts.length + index
+
+    this.toRotation = this.sectorAngle * rotationSteps
+
+    this.gridItems.push(this.items[(this.currentItemIndex - 1 + this.parts.length) % this.parts.length])
+    this.gridItems.push(this.items[this.currentItemIndex])
+    this.gridItems.push(this.items[(this.currentItemIndex + 1) % this.parts.length])
+  }
+
   stopRotation () {
     if (!this.isRotating) {
       return
@@ -90,7 +90,7 @@ export default class ReelView extends Phaser.Group {
     }
 
     this.tween = this.game.add.tween(this)
-    this.convertRotationRange2PI()
+    this.rotation = this.game.math.convertRotationRange2PI(this.rotation)
     let duration = this.game.rnd.integerInRange(2000, 3000)
 
     this.currentAngularSpeed = 0
@@ -100,13 +100,8 @@ export default class ReelView extends Phaser.Group {
   }
 
   onRotationComplete () {
-    this.convertRotationRange2PI()
+    this.rotation = this.game.math.convertRotationRange2PI(this.rotation)
     this.onStop.dispatch()
-  }
-
-  // wrap current rotation to appropriate one in range 0 - 2*PI
-  convertRotationRange2PI () {
-    this.rotation = this.game.math.degToRad((this.game.math.radToDeg(this.rotation) % 360))
   }
 
   onReachMaxSpeed () {

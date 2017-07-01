@@ -35,6 +35,8 @@ export default class ItemView extends Phaser.Image {
   onTweenStartListener () {
     this.visible = true
   }
+
+  // Custom shake easing function
   shakeEasing (progress) {
     return this.shake(progress, 10, 8)
   }
@@ -47,7 +49,6 @@ export default class ItemView extends Phaser.Image {
   }
 
   onShakeComplete () {
-    this.rotation = this.game.math.degToRad((this.game.math.radToDeg(this.rotation) % 360))
     this.onShakeStop.dispatch()
   }
 }

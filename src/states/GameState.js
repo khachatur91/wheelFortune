@@ -6,7 +6,7 @@ import WheelView from '../view/WheelView'
 import WheelController from '../controller/WheelController'
 import WheelModel from '../model/WheelModel'
 import AudioManager from '../AudioManager';
-import ItemView from "../view/ItemView";
+import ItemView from '../view/ItemView';
 
 export default class GameState extends Phaser.State {
   // TODO make static for custom Level state
@@ -16,16 +16,12 @@ export default class GameState extends Phaser.State {
   static PICK_ANIMATION_DURATION = 400
 
   init () {
-
     this.stage.backgroundColor = '#1b1a23'
 
     this.model = new WheelModel()
 
-    this.model.onRotateStateChange.add(this.onRotateStateChangeListener, this)
-    this.model.onWheelSpeedMax.add(this.onWheelSpeedMaxListener, this)
-
     this.audioManager = AudioManager.instance
-    this.b = 0
+    this.frameIndex = 0
     this.frames = []
     this.start = false
     this.sprite = null
@@ -36,30 +32,15 @@ export default class GameState extends Phaser.State {
     this.stopButtonDeactivateFrame = 'stopButtonDeactivate'
   }
 
-  onWheelSpeedMaxListener (isMax) {
-    if (isMax) {
-      this.setStopButtonInput(true)
-    }
+  onWheelSpeedMaxListener () {
+    this.setStopButtonInput(true)
   }
 
-  onRotateStateChangeListener (wheelState) {
-    switch (wheelState) {
-      case WheelModel.WHEEL_START_STATE:
-        this.isRolling = true
-        for (var i = 0; i < this.framesForBlur; i++) {
-          this.frames.push(this.game.make.bitmapData(this.game.width, this.game.height))
-        }
-        break
-      case WheelModel.WHEEL_STOP_STATE:
-        this.isRolling = false
-        this.frames.length = 0
-        this.audioManager.play('revealSFX')
-        // this.game.time.events.add(4000, this.resetWheel, this)
-        this.showColorContainer()
-        break
-      case WheelModel.WHEEL_STOP_PROCESSING_STATE:
-        break
-    }
+  onWheelStoppedListener () {
+    this.isRolling = false
+    this.frames.length = 0
+    this.audioManager.play('revealSFX')
+    this.showColorContainer()
   }
 
   createItemClones (items) {
@@ -94,10 +75,14 @@ export default class GameState extends Phaser.State {
 
   create () {
     this.controller = new WheelController(this.model)
+    this.controller.onWheelStop.add(this.onWheelStoppedListener, this)
+    this.controller.onWheelReachMaxSpeed.add(this.onWheelSpeedMaxListener, this)
+
     this.view = new WheelView(this.model)
     this.view.position.setTo(this.game.world.centerX, this.game.world.centerY)
 
     this.controller.setData(this.game.cache.getJSON('reelsData').reels)
+    this.setWheelResultPatter()
 
     this.framesForBlur = 6
 
@@ -119,7 +104,6 @@ export default class GameState extends Phaser.State {
     // this.spinButtonLabel.anchor.setTo(0.5)
     // this.spinButton.addChild(this.spinButtonLabel)
 
-
     this.colorContainer = this.game.add.image(this.game.world.centerX, 0, 'general', 'popup')
     this.colorContainer.anchor.setTo(0.5, 0)
     this.colorContainer.visible = false
@@ -127,12 +111,18 @@ export default class GameState extends Phaser.State {
     this.colorContainer.alpha = 0
   }
 
+  setWheelResultPatter () {
+    this.controller.setPatternToRoll([1, 2, 3, 4, 5])
+  }
+
   onPlayClick () {
     this.setPlayButtonInput(false)
-
-    this.audioManager.play('spinSFX')
-    this.controller.setPatternToRoll([1, 2, 3, 4, 5])
     this.controller.rotateWheel()
+
+    this.isRolling = true
+    for (var i = 0; i < this.framesForBlur; i++) {
+      this.frames.push(this.game.make.bitmapData(this.game.width, this.game.height))
+    }
   }
 
   onStopClick () {
@@ -173,14 +163,14 @@ export default class GameState extends Phaser.State {
 
   preRender () {
     if (this.isRolling) {
-      this.frames[this.b].cls()
-      this.frames[this.b].copyRect(
+      this.frames[this.frameIndex].cls()
+      this.frames[this.frameIndex].copyRect(
         this.game.canvas, this.world.bounds, 0, 0, 0.1
       )
-      this.b++
-      if (this.b === this.framesForBlur) {
+      this.frameIndex++
+      if (this.frameIndex === this.framesForBlur) {
         this.start = true
-        this.b = 0
+        this.frameIndex = 0
       }
     }
   }
@@ -191,10 +181,6 @@ export default class GameState extends Phaser.State {
         this.game.context.drawImage(this.frames[i].canvas, 0, 0)
       }
     }
-  }
-
-  resetWheel () {
-    this.controller.resetWheel()
   }
 
   onPopupShowListener () {

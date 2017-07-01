@@ -10,12 +10,10 @@ export default class WheelModel {
 
   constructor () {
     this.color = null
-    this.onRotateStateChange = new Phaser.Signal()
-    this.onStop = new Phaser.Signal()
-    this.onDataSet = new Phaser.Signal()
-    this.onPatternSet = new Phaser.Signal()
-    this.onReset = new Phaser.Signal()
-    this.onWheelSpeedMax = new Phaser.Signal()
+    this.onRotateStateChange = new Phaser.Signal() // Wheel rotation state changed - accepts one parameter state, which values are defined in WheelModel
+    this.onDataSet = new Phaser.Signal() // Reels content data is set
+    this.onPatternSet = new Phaser.Signal() // Result pattern is set
+    this.onWheelSpeedMax = new Phaser.Signal() // All wheel reels reach their max speed
   }
 
   setReelsData (reelsData) {
@@ -33,9 +31,8 @@ export default class WheelModel {
     this.onPatternSet.dispatch(patternArray)
   }
 
-  setWheelSpeedOnMax (isMax) {
-    this.isMax = isMax
-    this.onWheelSpeedMax.dispatch(isMax)
+  setWheelSpeedOnMax () {
+    this.onWheelSpeedMax.dispatch()
   }
 
   setWheelRotateState (rotationState) {

@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import PhaserNineSlice from '@orange-games/phaser-nineslice'
 import Game from '../main'
 
 export default class BootState extends Phaser.State {
@@ -10,10 +9,14 @@ export default class BootState extends Phaser.State {
     this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
     this.game.scale.pageAlignHorizontally = true
     this.game.scale.pageAlignVertically = true
-    if (__DEV__) {
-      this.game.time.advancedTiming = true
-    }
-    this.game.plugins.add(PhaserNineSlice.Plugin)
+
+    // append a rotation convert function
+    this.game.math.convertRotationRange2PI = this.convertRotationRange2PI
+  }
+
+  // wrap current rotation to appropriate one in range 0 - 2*PI
+  convertRotationRange2PI (rotation) {
+    return this.degToRad((this.radToDeg(rotation) % 360))
   }
 
   preload () {
