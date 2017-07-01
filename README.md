@@ -1,69 +1,133 @@
-# Phaser + ES6 + Webpack.
-#### A bootstrap project to create games with Phaser + ES6 + Webpack.
+# Wheel Of Fortune Slot Machine.
+<img src="https://github.com/khachatur91/wheelFortune/blob/master/preview.jpg">
 
-![Phaser+ES6+Webpack](https://raw.githubusercontent.com/lean/phaser-es6-webpack/master/assets/images/phaser-es6-webpack.jpg)
-
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
-
-## Features
+## Technology
 - ESLINT with JavaScript Standard Style configuration
-- Next generation of Javascript
+- Next generation of Javascript (ES6)
+- Phaser game engine
 - Webpack ready
-- Multiple browser testing
-- WebFont Loader
-
+- Multiple browser testin
 
 # Setup
-To use this bootstrap you’ll need to install a few things before you have a working copy of the project.
+<p>install all dependencies       - npm install </p>
+<p>development server run command - npm run dev</p>
+<p>build for deployment           - npm run deploy</p>
 
-## 1. Clone this repo:
+# Game
+The game is kind of a mix of slot machine and wheel of fortune
 
-Navigate into your workspace directory.
+Click "Play" to spin the wheel
 
-Run:
+Blur effect is implemented for the wheel, while it's spinning
 
-```git clone https://github.com/lean/phaser-es6-webpack.git```
+When all reals reach to their max speed, "Stop" button becomes active
 
-## 2. Install node.js and npm:
+Click "Stop" to stop the wheel
 
-https://nodejs.org/en/
+3 main raws are differed with a light on the wheel.
+In circular environment items from different raws are going farther from each other, that's why 
+an additional popup appears where all those items tween and make a proper 3 lines for slot proper view.
+After popup disappears, "Play" button becomes active
 
+# Scenes
+Game has 2 scenes BootState and GameState
 
-## 3. Install dependencies (optionally you could install [yarn](https://yarnpkg.com/)):
+### BootState
+Responsible for showing a logo and loading assets
 
-Navigate to the cloned repo’s directory.
+### GameState
+All the interesting stuff happens here
 
-Run:
+# Code Structure
+For the Wheel component it's used an MVC design. WheelModel is made in GameState, which is passed to WheelController and WheelView. WheelModel has Phaser.Signals which are the main way for communication bettwen Controller and View.
 
-```npm install``` 
+A util ColorContainer popup component, which appears during the session end, is not implemented in MVC
 
-or if you choose yarn, just run ```yarn```
+# Complex solutions
+#### Blur effect while spinning in GameState
 
-## 4. Run the development server:
+```javascript
+preRender () {
+    if (this.isRolling) {
+      this.frames[this.frameIndex].cls()
+      this.frames[this.frameIndex].copyRect(
+        this.game.canvas, this.world.bounds, 0, 0, 0.1
+      )
+      this.frameIndex++
+      if (this.frameIndex === this.framesForBlur) {
+        this.start = true
+        this.frameIndex = 0
+      }
+    }
+  }
 
-Run:
+  render () {
+    if (this.isRolling && this.start) {
+      for (let i = 0; i < this.framesForBlur; i++) {
+        this.game.context.drawImage(this.frames[i].canvas, 0, 0)
+      }
+    }
+  }
+  ```
+  
+  Store the canvas bitmapdata for last 10 frames with alpha = 0.1 in frames array with appropriate index, and render them while the wheel is spinning. Current implementation copies all canvas pixels, but because of the environment is static, this solution works. The ideal solution would copy only WheelView pixels.
+  
+ #### Set result index for each reel in ReelView
+ In GameState we set a pattern for result middle raw in this snipet in GameState. Patterns can be get from the backend in the future.
+ ```javascript 
+ setWheelResultPattern () {
+    this.controller.setPatternToRoll([1, 2, 3, 4, 5])
+  }
+ ```
+ 
+ ... which in final state sets the result index for each reel
+ 
+ ```javascript
+   setDestinationIndex (index) {
+    index = index || this.game.rnd.integerInRange(0, this.parts.length - 1)
+    this.currentItemIndex = index
+    let rotationSteps = this.game.rnd.integerInRange(1, 2) * this.parts.length + index
 
-```npm run dev```
+    this.toRotation = this.sectorAngle * rotationSteps
 
-This will run a server so you can run the game in a browser.
+    this.gridItems.push(this.items[(this.currentItemIndex - 1 + this.parts.length) % this.parts.length])
+    this.gridItems.push(this.items[this.currentItemIndex])
+    this.gridItems.push(this.items[(this.currentItemIndex + 1) % this.parts.length])
+  }
 
-Open your browser and enter localhost:3000 into the address bar.
+  stopRotation () {
+    if (!this.isRotating) {
+      return
+    }
+    if (this.tween && this.tween.isRunning) {
+      this.tween.stop()
+    }
 
-Also this will start a watch process, so you can change the source and the process will recompile and refresh the browser
+    this.tween = this.game.add.tween(this)
+    this.convertRotationRange2PI()
+    let duration = this.game.rnd.integerInRange(2000, 3000)
 
+    this.currentAngularSpeed = 0
+    this.isRotating = false
+    this.tween.to({rotation: this.toRotation}, duration, Phaser.Easing.Quadratic.Out, true)
+    this.tween.onComplete.add(this.onRotationComplete, this)
+  }
+  ```
+  
+  in the code above the final rotation is calculated of the reel, and when it is stopped, the reel tweens it's current rotation to final rotation. Duration and Ease function values of the tween make the switch process (spinning with maxSpeed to tween to final rotation) very smooth.
+  
+  #### Append a custom math function to game.math in BootState
+  
+  ```javascript
+  this.game.math.convertRotationRange2PI = this.convertRotationRange2PI
+  
 
-## Build for deployment:
+  // wrap current rotation to appropriate one in range 0 - 2*PI
+  convertRotationRange2PI (rotation) {
+    return this.degToRad((this.radToDeg(rotation) % 360))
+  }
+  ```
+  
 
-Run:
-
-```npm run deploy```
-
-This will optimize and minimize the compiled bundle.
-
-## Credits
-Big thanks to this great repos:
-
-https://github.com/belohlavek/phaser-es6-boilerplate
-
-https://github.com/cstuncsik/phaser-es6-demo
+  
+  
