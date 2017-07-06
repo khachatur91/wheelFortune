@@ -52,7 +52,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'index.template.ejs',
             hash: true,
-            title: 'literatus'
+            title: 'Wheel Of Fortune Slot'
         }),
 
         new CopyWebpackPlugin([{

@@ -16,8 +16,6 @@ export default class GameState extends Phaser.State {
   static PICK_ANIMATION_DURATION = 400
 
   init () {
-    this.stage.backgroundColor = '#1b1a23'
-
     this.resultPatterns = this.game.cache.getJSON('resultPatterns').patterns
     this.model = new WheelModel()
 

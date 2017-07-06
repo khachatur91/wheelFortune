@@ -3,7 +3,7 @@ import Game from '../main'
 
 export default class BootState extends Phaser.State {
   init () {
-    this.game.stage.backgroundColor = '#3498db'
+    this.stage.backgroundColor = '#1b1a23'
     this.game.renderer.renderSession.roundPixels = true
 
     this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
@@ -20,13 +20,11 @@ export default class BootState extends Phaser.State {
   }
 
   preload () {
-    const
-      {load} = this.game
-    load.pack('initial', 'assets/assets.json')
-    load.start()
+    this.game.load.image('logo', 'assets/logo.png')
+    this.game.load.start()
   }
 
   create () {
-    this.state.start(Game.GAME)
+    this.state.start(Game.SPLASH)
   }
 }

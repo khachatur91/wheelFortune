@@ -17,13 +17,16 @@ export default class AudioManager {
   }
 
   constructor (enforcer) {
-    if (enforcer !== singletonEnforcer) throw new TypeError('Cannot construct singleton')
+    if (enforcer !== singletonEnforcer) {
+      throw new TypeError('Cannot construct singleton')
+    }
     this.game = window.game
     this.sounds = []
     this.commads = []
     this.decoded = false
     this.revealSFX = this.game.add.audio('reveal')
     this.spinSFX = this.game.add.audio('spin')
+    this.spinSFX.play()
     this.sounds.push(this.revealSFX)
     this.sounds.push(this.spinSFX)
     this.game.sound.setDecodedCallback(this.sounds, this.onDecode, this)

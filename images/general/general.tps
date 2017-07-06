@@ -199,79 +199,77 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">apple.png</key>
-            <key type="filename">cake1.png</key>
-            <key type="filename">cake2.png</key>
-            <key type="filename">cake3.png</key>
-            <key type="filename">cake4.png</key>
-            <key type="filename">cake5.png</key>
-            <key type="filename">cake6.png</key>
-            <key type="filename">cookie1.png</key>
-            <key type="filename">cookie2.png</key>
-            <key type="filename">eggplant.png</key>
-            <key type="filename">grape.png</key>
-            <key type="filename">pineapple.png</key>
+            <key type="filename">bg.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>32,32,64,64</rect>
+                <rect>480,270,960,540</rect>
                 <key>scale9Paddings</key>
-                <rect>32,32,64,64</rect>
+                <rect>480,270,960,540</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">button.png</key>
+            <key type="filename">blueItem.png</key>
+            <key type="filename">cianItem.png</key>
+            <key type="filename">greenItem.png</key>
+            <key type="filename">orangeItem.png</key>
+            <key type="filename">purpleItem.png</key>
+            <key type="filename">redItem.png</key>
+            <key type="filename">whiteItem.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>95,23,189,45</rect>
+                <rect>12,12,23,23</rect>
                 <key>scale9Paddings</key>
-                <rect>95,23,189,45</rect>
+                <rect>12,12,23,23</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">green-button.png</key>
+            <key type="filename">playButtonActive.png</key>
+            <key type="filename">playButtonDeactivate.png</key>
+            <key type="filename">stopButtonActive.png</key>
+            <key type="filename">stopButtonDeactivate.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>16,16,33,33</rect>
+                <rect>78,36,156,71</rect>
                 <key>scale9Paddings</key>
-                <rect>16,16,33,33</rect>
+                <rect>78,36,156,71</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">star-empty.png</key>
+            <key type="filename">popup.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>26,27,51,53</rect>
+                <rect>180,98,361,196</rect>
                 <key>scale9Paddings</key>
-                <rect>26,27,51,53</rect>
+                <rect>180,98,361,196</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">star.png</key>
+            <key type="filename">transparentOverlay.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
+                <rect>148,162,297,324</rect>
                 <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
+                <rect>148,162,297,324</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
