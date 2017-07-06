@@ -3,7 +3,6 @@ import Game from '../main'
 
 export default class SplayState extends Phaser.State {
   init () {
-
     this.stage.backgroundColor = '#1b1a23'
     this.isLoaded = false
     this.isTweenComplete = false
@@ -22,7 +21,7 @@ export default class SplayState extends Phaser.State {
   create () {
     this.isLoaded = true
     if (this.isTweenComplete) {
-      this.state.start(Game.GAME)
+      this.state.start(Game.STATE_GAME)
     }
   }
 
@@ -30,7 +29,7 @@ export default class SplayState extends Phaser.State {
     console.log("Complete")
     this.isTweenComplete = true
     if (this.isLoaded) {
-      this.state.start(Game.GAME)
+      this.state.start(Game.STATE_GAME)
     }
   }
 }

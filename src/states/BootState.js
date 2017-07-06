@@ -25,6 +25,6 @@ export default class BootState extends Phaser.State {
   }
 
   create () {
-    this.state.start(Game.SPLASH)
+    this.state.start(Game.STATE_SPLASH)
   }
 }
