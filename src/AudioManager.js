@@ -26,7 +26,6 @@ export default class AudioManager {
     this.decoded = false
     this.revealSFX = this.game.add.audio('reveal')
     this.spinSFX = this.game.add.audio('spin')
-    this.spinSFX.play()
     this.sounds.push(this.revealSFX)
     this.sounds.push(this.spinSFX)
     this.game.sound.setDecodedCallback(this.sounds, this.onDecode, this)
