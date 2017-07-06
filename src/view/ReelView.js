@@ -73,7 +73,7 @@ export default class ReelView extends Phaser.Group {
     // if result pattern is not defined , result would be a random
     index = index || this.game.rnd.integerInRange(0, this.parts.length - 1)
     this.currentItemIndex = index
-    let rotationSteps = this.game.rnd.integerInRange(1, 2) * this.parts.length + index
+    let rotationSteps = 2 * this.parts.length + index
 
     this.toRotation = this.sectorAngle * rotationSteps
 
