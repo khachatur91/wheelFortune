@@ -9,7 +9,7 @@
 - Multiple browser testin
 
 # Setup
-<p>install all dependencies       - npm install </p>
+<p>install all dependencies       - npm install</p>
 <p>development server run command - npm run dev</p>
 <p>build for deployment           - npm run deploy</p>
 
@@ -40,8 +40,6 @@ All the interesting stuff happens here
 
 # Code Structure
 For the Wheel component it's used an MVC design. WheelModel is made in GameState, which is passed to WheelController and WheelView. WheelModel has Phaser.Signals which are the main way for communication bettwen Controller and View.
-
-A util ColorContainer popup component, which appears during the session end, is not implemented in MVC
 
 # Complex solutions
 #### Blur effect while spinning in GameState
@@ -75,8 +73,10 @@ preRender () {
  #### Set result index for each reel in ReelView
  In GameState we set a pattern for result middle raw in this snipet in GameState. Patterns can be get from the backend in the future.
  ```javascript 
- setWheelResultPattern () {
-    this.controller.setPatternToRoll([1, 2, 3, 4, 5])
+ 
+  setResultPattern () {
+    let randomPatternIndex = this.game.rnd.integerInRange(0, this.resultPatterns.length - 1)
+    this.controller.setPatternToRoll(this.resultPatterns[randomPatternIndex])
   }
  ```
  
